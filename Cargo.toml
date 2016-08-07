@@ -1,0 +1,12 @@
+[package]
+name = "passkeeper"
+version = "0.1.0"
+authors = ["Tara Vancil <tbvanc@gmail.com"]
+
+[dependencies]
+rand = "0.3"
+rust-crypto = "0.2.36"
+serde = "0.8.0"
+serde_json = "0.8"
+serde_macros = "0.8"
+sodiumoxide = "0.0.12"
