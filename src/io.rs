@@ -62,7 +62,7 @@ pub fn get_key_data() -> Result<vault::KeyData, Error> {
             let key_data: vault::KeyData = serde_json::from_str(&serialized).unwrap();
             return Ok(key_data)
         }
-        Err(err) => return (Err(err))
+        Err(err) => return Err(err)
     }
 }
 
