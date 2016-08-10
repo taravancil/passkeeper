@@ -37,10 +37,10 @@ pub struct Vault {
 
 /// Returns true if $HOME/.passkeeper/ contains a valid Vault and KeyData
 pub fn is_initialized() -> bool {
-    let vault_path = io::get_vault_path();
-    let key_data_path = io::get_key_data_path();
-    
-    Path::new(&vault_path).exists() && Path::new(&key_data_path).exists()
+    let vault = io::get_vault();
+    let key_data = io::get_key_data();
+
+    vault.is_ok() && key_data.is_ok()
 }
 
 /// Initializes passkeeper

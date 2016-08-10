@@ -53,23 +53,33 @@ pub fn get_key_data_path() -> PathBuf {
 /// Returns the key data or an Error
 pub fn get_key_data() -> Result<vault::KeyData, Error> {
     let path = get_key_data_path();
-    let mut f = fs::File::open(&path).unwrap();
-    let mut serialized = String::new();
-    f.read_to_string(&mut serialized).unwrap();
 
-    let key_data: vault::KeyData = serde_json::from_str(&serialized).unwrap();
-    Ok(key_data)
+    match fs::File::open(&path) {
+        Ok(f) => {
+            let mut f = f;
+            let mut serialized = String::new();
+            f.read_to_string(&mut serialized).unwrap();
+            let key_data: vault::KeyData = serde_json::from_str(&serialized).unwrap();
+            return Ok(key_data)
+        }
+        Err(err) => return (Err(err))
+    }
 }
 
 /// Returns the vault or an Error
 pub fn get_vault() -> Result<vault::Vault, Error> {
     let path = get_vault_path();
-    let mut f = fs::File::open(&path).unwrap();
-    let mut serialized = String::new();
-    f.read_to_string(&mut serialized).unwrap();
 
-    let vault: vault::Vault = serde_json::from_str(&serialized).unwrap();
-    Ok(vault)
+    match fs::File::open(&path) {
+        Ok(f) => {
+            let mut f = f;
+            let mut serialized = String::new();
+            f.read_to_string(&mut serialized).unwrap();
+            let vault: vault::Vault = serde_json::from_str(&serialized).unwrap();
+            return Ok(vault)
+        }
+        Err(err) => return Err(err)
+    }
 }
 
 /// Replaces the existing vault file `vault`
