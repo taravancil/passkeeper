@@ -1,10 +1,15 @@
 # passkeeper
 
-passkeeper is a tool for managing secrets like passwords or recovery codes.
+passkeeper is a tool for managing secrets like passwords or recovery codes. Inspired by [`passgo`](https://github.com/ejcx/passgo).
+
+This is a work in progress. Use at your own risk, but really, you probably shouldn't.
 
 All secrets are stored in an encrypted form and can only be decrypted with your
-master password, which should be a unique and strong password (like a diceware
-passphrase).
+master password, which should be a unique and strong password (like a [diceware
+passphrase](http://world.std.com/~reinhold/diceware.html)).
+
+## Rust version
+At the moment, passkeeper only works with the nightly Rust build. You can use [rustup](https://github.com/rust-lang-nursery/rustup.rs/#other-installation-methods) to easily switch between different Rust toolchains.
 
 ## Dependencies
 
@@ -17,7 +22,7 @@ make
 sudo make install
 ```
 
-Then set `SODIUM_LIB_DIR` to the directory with libsodium.a:
+Then set `SODIUM_LIB_DIR`:
 
 ```bash
 export SODIUM_LIB_DIR=/usr/local/lib
@@ -57,6 +62,3 @@ the master private key.
 * master public key: stored in config file as plaintext, used for encrypting secrets
 * secret-specific private key: used to encrypt the secret, then discarded
 * secret-specific public key: stored in vault as plaintext, used to decrypt the secret
-
-All authentication and asymmetric and symmetric encryption/decryption is done with
-sodiumoxide, which provides bindings to libsodium.
