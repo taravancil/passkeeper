@@ -96,7 +96,7 @@ pub fn commands() {
     println!("\nCOMMANDS:");
 
     for (name, c) in &get_commands() {
-        println!("\t{}\t{}", &c.name, &c.description);
+        println!("\t{}\t{}", name, &c.description);
     }
 }
 
