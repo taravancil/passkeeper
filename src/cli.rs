@@ -4,7 +4,7 @@ use std::io::{ Error, ErrorKind };
 pub struct Command<'a> {
     pub name: &'a str,
     pub description: &'a str,
-    pub required: usize,
+    pub required: Vec<&'a str>,
     pub arguments: Option<Vec<Argument <'a>>>,
     pub options: Option<Vec<Option_<'a>>>,
 }
@@ -19,11 +19,18 @@ pub struct Option_<'a> {
     pub description: &'a str,
 }
 
+impl<'a> Command<'a> {
+    pub fn usage(&self) {
+        println!("USAGE:");
+        println!("passkeeper {} {:?}", &self.name, &self.required);
+    }
+}
+
 pub fn get_commands<'a>() -> HashMap<&'a str, Command<'a>> {
     let help = Command {
         name: "help",
         description: "Show the help page",
-        required: 0,
+        required: vec!(),
         options: None,
         arguments: None,
     };
@@ -31,7 +38,7 @@ pub fn get_commands<'a>() -> HashMap<&'a str, Command<'a>> {
     let usage = Command {
         name: "usage",
         description: "Show this page",
-        required: 0,
+        required: vec!(),
         options: None,
         arguments: None
     };
@@ -39,7 +46,7 @@ pub fn get_commands<'a>() -> HashMap<&'a str, Command<'a>> {
     let init = Command {
         name: "init",
         description: "Initialize passkeeper",
-        required: 0,
+        required: vec!(),
         options: None,
         arguments: None,
     };
@@ -47,7 +54,7 @@ pub fn get_commands<'a>() -> HashMap<&'a str, Command<'a>> {
     let add = Command {
         name: "add",
         description: "Add a password to the vault",
-        required: 1,
+        required: vec!("<site>"),
         options: None,
         arguments: None
     };
@@ -55,7 +62,7 @@ pub fn get_commands<'a>() -> HashMap<&'a str, Command<'a>> {
     let rm = Command {
         name: "rm",
         description: "Remove a password from the vault",
-        required: 1,
+        required: vec!("<site>"),
         options: None, // TODO
         arguments: None, // TODO
     };
@@ -63,7 +70,7 @@ pub fn get_commands<'a>() -> HashMap<&'a str, Command<'a>> {
     let show = Command {
         name: "show",
         description: "Show the password for a given site",
-        required: 1,
+        required: vec!("<site>"),
         options: None, // TODO
         arguments: None,
     };
@@ -71,7 +78,7 @@ pub fn get_commands<'a>() -> HashMap<&'a str, Command<'a>> {
     let ls = Command {
         name: "ls",
         description: "List saved passwords",
-        required: 0,
+        required: vec!(),
         options: None,
         arguments: None
     };
@@ -108,9 +115,8 @@ pub fn help() {
 }
 
 pub fn check_args(command: &Command, args: &[String]) -> Result<(), Error> {
-    if args.len() < command.required {
-        println!("Error: Missing required arguments");
-        help();
+    if args.len() < command.required.len() {
+        println!("Error: Missing required argument(s)\n");
         return Err(Error::new(ErrorKind::InvalidInput, "Missing required argument"))
     }
     Ok(())
