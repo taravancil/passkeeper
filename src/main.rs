@@ -28,16 +28,28 @@ fn main() {
             "add" => {
                 let command = commands.get("add").unwrap();
                 if cli::check_args(command, &args[2..]).is_err() { return }
+                if &args[i+2] == "usage" {
+                    command.usage();
+                    return
+                }
                 vault::add(&args[i+2]);
             },
             "rm" => {
                 let command = commands.get("rm").unwrap();
                 if cli::check_args(command, &args[2..]).is_err() { return }
+                if &args[i+2] == "usage" {
+                    command.usage();
+                    return
+                }
                 vault::remove(&args[i+2]);
             }
             "show" => {
                 let command = commands.get("show").unwrap();
                 if cli::check_args(command, &args[2..]).is_err() { return }
+                if &args[i+2] == "usage" {
+                    command.usage();
+                    return
+                }
                 vault::show(&args[i+2]);
             }
             _ => {

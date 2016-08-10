@@ -116,7 +116,8 @@ pub fn help() {
 
 pub fn check_args(command: &Command, args: &[String]) -> Result<(), Error> {
     if args.len() < command.required.len() {
-        println!("Error: Missing required argument(s)\n");
+        println!("Error: Missing required argument(s)");
+        command.usage();
         return Err(Error::new(ErrorKind::InvalidInput, "Missing required argument"))
     }
     Ok(())
