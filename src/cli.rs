@@ -83,11 +83,11 @@ pub fn get_commands<'a>() -> HashMap<&'a str, Command<'a>> {
         arguments: None
     };
 
-    let mut commandsList = HashMap::new();
+    let mut commands_list = HashMap::new();
     let commands = vec!(add, rm, show, ls, init, help, usage);
 
     for c in commands {
-        commandsList.insert(c.name, c);
+        commands_list.insert(c.name, c);
     }
     commandsList
 }
