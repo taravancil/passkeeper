@@ -50,6 +50,15 @@ pub fn init() {
         return
     }
 
+    // Prompt the user for a master password; require verification
+    let master_password = match io::prompt_password("Enter a master password", true) {
+        Ok(password) => password,
+        Err(err) => {
+           println!("Error: {}", err.to_string());
+           return
+        }
+    };
+
     // Create the $HOME/.passkeeper directory
     if io::create_passkeeper_dir().is_err() {
         println!("Error: couldn't make passkeeper directory");
@@ -67,16 +76,6 @@ pub fn init() {
         println!("Error: couldn't create key data file");
         return
     }
-
-    // Prompt the user for a master password; require verification
-    let master_password =
-        match io::prompt_password("Enter a master password", true) {
-            Ok(password) => password,
-            Err(err) => {
-                println!("Error: {}", err.to_string());
-                return
-            }
-        };
 
     println!("Generating and encrypting your keys...");
 
