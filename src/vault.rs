@@ -1,6 +1,7 @@
 // std
 use std::collections::HashMap;
 use std::path::Path;
+use std::process::Command;
 
 // external
 extern crate serde;
@@ -38,7 +39,7 @@ pub struct Vault {
 pub fn is_initialized() -> bool {
     let vault_path = io::get_vault_path();
     let key_data_path = io::get_key_data_path();
-
+    
     Path::new(&vault_path).exists() && Path::new(&key_data_path).exists()
 }
 
@@ -234,6 +235,11 @@ pub fn show(site: &str) {
                 &key_data.sealed_master_privkey,
                 &secretbox::Nonce(key_data.sealed_master_privkey_salt),
                 &secretbox::Key(master_key));
+
+            if master_privkey.is_err() {
+                println!("Sorry, wrong password");
+                return
+            }
 
             // TODO: This is hacky
             // Do I need to clone the slice to get master_password as raw bytes?
