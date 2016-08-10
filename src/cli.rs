@@ -1,6 +1,10 @@
+use std::collections::HashMap;
+use std::io::{ Error, ErrorKind };
+
 pub struct Command<'a> {
     pub name: &'a str,
     pub description: &'a str,
+    pub required: usize,
     pub arguments: Option<Vec<Argument <'a>>>,
     pub options: Option<Vec<Option_<'a>>>,
 }
@@ -15,10 +19,11 @@ pub struct Option_<'a> {
     pub description: &'a str,
 }
 
-pub fn get_commands<'a>() -> Vec<Command<'a>> {
+pub fn get_commands<'a>() -> HashMap<&'a str, Command<'a>> {
     let help = Command {
         name: "help",
         description: "Show the help page",
+        required: 0,
         options: None,
         arguments: None,
     };
@@ -26,6 +31,7 @@ pub fn get_commands<'a>() -> Vec<Command<'a>> {
     let usage = Command {
         name: "usage",
         description: "Show this page",
+        required: 0,
         options: None,
         arguments: None
     };
@@ -33,6 +39,7 @@ pub fn get_commands<'a>() -> Vec<Command<'a>> {
     let init = Command {
         name: "init",
         description: "Initialize passkeeper",
+        required: 0,
         options: None,
         arguments: None,
     };
@@ -40,31 +47,48 @@ pub fn get_commands<'a>() -> Vec<Command<'a>> {
     let add = Command {
         name: "add",
         description: "Add a password to the vault",
+        required: 1,
         options: None,
         arguments: None
     };
 
     let rm = Command {
-        name: "rm, delete",
+        name: "rm",
         description: "Remove a password from the vault",
+        required: 1,
         options: None, // TODO
         arguments: None, // TODO
     };
 
-    let list = Command {
-        name: "list, ls",
+    let show = Command {
+        name: "show",
+        description: "Show the password for a given site",
+        required: 1,
+        options: None, // TODO
+        arguments: None,
+    };
+
+    let ls = Command {
+        name: "ls",
         description: "List saved passwords",
+        required: 0,
         options: None,
         arguments: None
     };
 
-    vec!(usage, help, init, add, rm, list)
+    let mut commandsList = HashMap::new();
+    let commands = vec!(add, rm, show, ls, init, help, usage);
+
+    for c in commands {
+        commandsList.insert(c.name, c);
+    }
+    commandsList
 }
 
 pub fn commands() {
     println!("\nCOMMANDS:");
 
-    for c in get_commands() {
+    for (name, c) in &get_commands() {
         println!("\t{}\t{}", &c.name, &c.description);
     }
 }
@@ -81,4 +105,13 @@ pub fn help() {
     println!("AUTHOR:\n\tTara Vancil <tbvanc@gmail.com>");
     usage();
     commands();
+}
+
+pub fn check_args(command: &Command, args: &[String]) -> Result<(), Error> {
+    if args.len() < command.required {
+        println!("Error: Missing required arguments");
+        help();
+        return Err(Error::new(ErrorKind::InvalidInput, "Missing required argument"))
+    }
+    Ok(())
 }

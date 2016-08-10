@@ -16,36 +16,29 @@ fn main() {
         cli::help();
     }
 
+    let commands = cli::get_commands();
+
     // TODO: Handle subarguments better
     for (i, a) in args[1..].iter().enumerate() {
         match a.as_ref() {
             "-h" | "--help" => cli::help(),
             "usage" => cli::usage(),
             "init" => vault::init(),
-            "ls" | "list" => vault::list(),
+            "ls" => vault::list(),
             "add" => {
-                if args.len() < i + 3 {
-                    println!("Error: missing argument");
-                    cli::usage();
-                    return
-                }
+                let command = commands.get("add").unwrap();
+                if cli::check_args(command, &args[2..]).is_err() { return }
                 vault::add(&args[i+2]);
             },
-            "rm" | "delete" => {
-                if args.len() < i + 3 {
-                    println!("Error: missing argument");
-                    cli::usage();
-                    return
-                }
+            "rm" => {
+                let command = commands.get("rm").unwrap();
+                if cli::check_args(command, &args[2..]).is_err() { return }
                 vault::remove(&args[i+2]);
             }
             "show" => {
-                if args.len() < i + 3 {
-                    println!("Error: Missing argument");
-                    cli::usage();
-                    return
-                }
-                vault::show(&args[i+2])
+                let command = commands.get("show").unwrap();
+                if cli::check_args(command, &args[2..]).is_err() { return }
+                vault::show(&args[i+2]);
             }
             _ => {
                 // Handle unrecognized args and opts
