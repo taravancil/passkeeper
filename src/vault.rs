@@ -1,7 +1,5 @@
 // std
 use std::collections::HashMap;
-use std::path::Path;
-use std::process::Command;
 
 // external
 extern crate serde;

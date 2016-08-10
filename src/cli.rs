@@ -89,7 +89,7 @@ pub fn get_commands<'a>() -> HashMap<&'a str, Command<'a>> {
     for c in commands {
         commands_list.insert(c.name, c);
     }
-    commandsList
+    commands_list
 }
 
 pub fn commands() {
